@@ -61,6 +61,14 @@ success "Vérifications OK."
 # ─── 1. Mise à jour système ───────────────────────────────────────────────────
 section "1 · Mise à jour des paquets système"
 
+# Supprimer toute entrée NodeSource résiduelle avant apt-get update
+# (évite l'erreur GPG NO_PUBKEY 2F59B5F99B1BE0B4 sur les re-runs)
+sudo rm -f \
+    /etc/apt/sources.list.d/nodesource.list \
+    /etc/apt/sources.list.d/nodistro.list \
+    /usr/share/keyrings/nodesource.gpg \
+    /usr/share/keyrings/nodesource.asc
+
 sudo apt-get update -qq
 sudo apt-get install -y -qq \
     ca-certificates curl gnupg lsb-release git wget unzip \
@@ -68,6 +76,7 @@ sudo apt-get install -y -qq \
     socat conntrack ipset jq python3 python3-pip
 
 success "Système mis à jour."
+
 
 # ─── 2. Docker ───────────────────────────────────────────────────────────────
 section "2 · Docker"
