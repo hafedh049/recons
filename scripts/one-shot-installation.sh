@@ -93,8 +93,11 @@ for i in $(seq 1 15); do
     [ $i -eq 15 ] && warn "Docker daemon lent à démarrer — poursuite quand même."
 done
 
-# Accès immédiat au socket sans reconnexion ni newgrp
-sudo chmod 666 /var/run/docker.sock
+
+# Le socket est /run/docker.sock sur Ubuntu 22.04+ (/ var/run est un symlink)
+# On chmod les deux pour couvrir toutes les versions
+sudo chmod 666 /run/docker.sock 2>/dev/null || true
+sudo chmod 666 /var/run/docker.sock 2>/dev/null || true
 success "Docker installé et opérationnel : $(docker --version)"
 
 # ─── 3. Node.js 20 LTS ───────────────────────────────────────────────────────
