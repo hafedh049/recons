@@ -12,7 +12,7 @@
 #   ./one-shot-installation.sh
 #
 # CE QUI EST INSTALLÉ
-#   Docker, Trivy, Hadolint (binaire), Node.js 20, Bandit, Semgrep, Safety, Snyk
+#   Docker, Trivy, Hadolint (binaire), Node.js 20, Bandit, Semgrep, Safety
 #   SonarQube (port 9000), OWASP Juice Shop (port 3001)
 #   containerd, kubeadm v1.30, kubelet, kubectl, Flannel, Helm
 #   Alias : k=kubectl dans ~/.bashrc
@@ -141,7 +141,7 @@ else
 fi
 
 # ─── 6. Outils SAST/SCA ──────────────────────────────────────────────────────
-section "6 · Outils SAST/SCA (Bandit, Semgrep, Safety, Snyk)"
+section "6 · Outils SAST/SCA (Bandit, Semgrep, Safety)"
 
 # Installer en mode système (compatible Ubuntu 22.04 et 24.04)
 pip3 install --quiet --break-system-packages bandit semgrep safety 2>/dev/null || \
@@ -155,15 +155,6 @@ grep -q '\.local/bin' "$HOME/.bashrc" 2>/dev/null || \
 success "Bandit   : $(bandit --version 2>/dev/null | head -1 || echo installé)"
 success "Semgrep  : $(semgrep --version 2>/dev/null | head -1 || echo installé)"
 success "Safety   : $(safety --version 2>/dev/null | head -1 || echo installé)"
-
-# Snyk via npm
-if command -v snyk &>/dev/null; then
-    success "Snyk déjà installé : $(snyk --version 2>/dev/null || echo ok)"
-else
-    sudo npm install -g snyk --quiet 2>/dev/null && \
-        success "Snyk installé." || \
-        warn "Snyk: installation échouée (non bloquant)."
-fi
 
 # ─── 7. SonarQube ────────────────────────────────────────────────────────────
 section "7 · SonarQube (port 9000)"
