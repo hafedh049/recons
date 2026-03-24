@@ -35,7 +35,13 @@ jobs:
           username: ubuntu
           key: ${{ secrets.VM_SSH_KEY }}
           script: |
+            # Ensure namespace exists
             kubectl create namespace production --dry-run=client -o yaml | kubectl apply -f -
+      
+            # Apply deployment YAML (creates deployment if missing, updates if exists)
+            kubectl apply -f ~/cyberwatch/k8s/deployment.yaml -n production
+      
+            # Update image to latest CI build
             kubectl set image deployment/cyberwatch \
               cyberwatch=${{ secrets.DOCKERHUB_USERNAME }}/cyberwatch:${{ github.run_number }} \
               -n production
