@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - dev
-      - main
 
 jobs:
   build-push-deploy:
@@ -28,15 +27,3 @@ jobs:
           docker push $IMAGE_NAME:${{ github.run_number }}
           docker tag $IMAGE_NAME:${{ github.run_number }} $IMAGE_NAME:latest
           docker push $IMAGE_NAME:latest
-
-      - name: Deploy to Kubernetes
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.VM_HOST }}
-          username: ubuntu
-          key: ${{ secrets.VM_SSH_KEY }}
-          script: |
-            kubectl set image deployment/cyberwatch \
-              cyberwatch=${{ secrets.DOCKERHUB_USERNAME }}/cyberwatch:${{ github.run_number }} \
-              -n production
-            kubectl rollout status deployment/cyberwatch -n production
